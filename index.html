@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#05030a">
+
+  <title>EDUCORE — Learn Beyond Limits</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css?v=20261124">
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Main JavaScript -->
+  <script src="app.js?v=20261124" defer></script>
+</head>
+
+<body>
+
+  <!-- BACKGROUND -->
+  <div class="background-effects">
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+    <div class="background-stars"></div>
+  </div>
+
+  <!-- Assistant view video background (plays only while Assistant is active) -->
+  <video class="bg-video" id="bgVideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1">
+    <source src="Assets/Blackhole live.mp4" type="video/mp4">
+  </video>
+
+  <!-- APP CONTAINER -->
+  <div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="brand">
+        <div class="brand-text">
+          <h2>EDUCORE</h2>
+          <span>LEARN BEYOND LIMITS</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <span class="sidebar-heading">MENU</span>
+
+        <nav class="navigation">
+
+          <button class="nav-item active" data-view="dashboard">
+            <span class="nav-icon">⌂</span>
+            <span>Dashboard</span>
+          </button>
+
+          <button class="nav-item" data-view="assistant">
+            <span class="nav-icon">✧</span>
+            <span>AI Assistant</span>
+          </button>
+
+          <button class="nav-item" data-view="subjects">
+            <span class="nav-icon">▤</span>
+            <span>Subjects</span>
+          </button>
+
+          <button class="nav-item" data-view="quiz">
+            <span class="nav-icon">◈</span>
+            <span>Quick Quiz</span>
+          </button>
+
+          <button class="nav-item" data-view="progress">
+            <span class="nav-icon">◔</span>
+            <span>My Learning</span>
+          </button>
+
+          <button class="nav-item" data-view="settings">
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+          </button>
+
+        </nav>
+      </div>
+
+      <div class="sidebar-bottom">
+
+        <button class="sidebar-profile" id="sidebarProfile" type="button">
+          <span class="sidebar-profile-avatar" id="sidebarProfileAvatar">S</span>
+          <span class="sidebar-profile-info">
+            <strong id="sidebarProfileName">Guest</strong>
+            <small id="sidebarProfileStatus">Local profile</small>
+          </span>
+          <span class="sidebar-profile-chevron">›</span>
+        </button>
+
+        <div class="theme-card">
+          <div class="theme-card-info">
+            <span class="theme-symbol" id="themeIcon">☾</span>
+
+            <div>
+              <strong>Appearance</strong>
+              <small id="themeLabel">Dark mode</small>
+            </div>
+          </div>
+
+          <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+            <span></span>
+          </button>
+        </div>
+
+        <div class="team-card">
+          <div class="team-card-icon">IX</div>
+
+          <div>
+            <strong>Class IX</strong>
+            <small>Learning workspace</small>
+          </div>
+        </div>
+
+        <button class="credits-link" id="openCreditsFooterBtn" type="button">
+          <span>✦</span> About EDUCORE
+        </button>
+
+      </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- TOPBAR -->
+      <header class="topbar">
+
+        <div class="topbar-left">
+          <span class="topbar-eyebrow" id="topbarGreeting">YOUR LEARNING SPACE</span>
+          <h1 id="pageName">Dashboard</h1>
+        </div>
+
+        <div class="topbar-right">
+
+          <div class="status-indicator">
+            <span class="status-dot"></span>
+            <span>System online</span>
+          </div>
+
+          <button class="topbar-icon-button" id="openNotificationsBtn" type="button" aria-label="Notifications" aria-expanded="false">
+            <span class="topbar-icon">◔</span>
+            <span class="notification-dot" id="notificationDot" hidden></span>
+          </button>
+
+          <button class="topbar-icon-button" id="openSettingsBtn" type="button" aria-label="Settings">
+            <span class="topbar-icon">⚙</span>
+          </button>
+
+          <div class="notification-panel" id="notificationPanel" hidden>
+
+            <div class="notification-panel-head">
+              <div>
+                <span class="section-eyebrow">ACTIVITY</span>
+                <h3>Notifications</h3>
+              </div>
+              <button class="notification-clear" id="clearNotificationsBtn" type="button">Clear</button>
+            </div>
+
+            <div class="notification-list" id="notificationList"></div>
+
+          </div>
+
+          <div id="googleOneTap" class="google-one-tap" style="display: none; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 30px; padding: 6px 12px;">
+            <span class="google-one-tap-avatar" id="googleOneTapAvatar" style="width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(140deg, #a66bff, #6030a4); color: white; font-size: 11px; font-weight: 700; display: grid; place-items: center;"></span>
+            <span class="google-one-tap-text" id="googleOneTapText" style="color: var(--text); font-size: 9px; font-weight: 600;"></span>
+            <span style="margin-left: 8px; color: var(--purple-light); font-size: 8px; font-weight: 700;" id="googleOneTapContinue">Continue as Skull</span>
+          </div>
+
+          <div class="profile-menu" id="profileMenu">
+
+            <button class="profile-button" id="openAuthBtn" type="button" aria-haspopup="menu" aria-expanded="false">
+              <span class="profile-avatar" id="profileAvatar">S</span>
+              <span id="authBtnLabel">Sign in</span>
+              <span class="profile-caret" aria-hidden="true">▾</span>
+            </button>
+
+            <div class="profile-dropdown" id="profileDropdown" role="menu" hidden>
+
+              <div class="profile-dropdown-head">
+                <span class="profile-dropdown-avatar" id="dropdownAvatar">S</span>
+                <div class="profile-dropdown-identity">
+                  <strong id="dropdownName">Guest</strong>
+                  <small id="dropdownEmail">Not signed in</small>
+                </div>
+              </div>
+
+              <div class="profile-dropdown-badge" id="dropdownBadge">
+                Local profile · stored in this browser
+              </div>
+
+              <div class="profile-dropdown-divider"></div>
+
+              <button class="profile-dropdown-item" data-profile-action="view" type="button" role="menuitem">
+                <span>◉</span> View Profile
+              </button>
+
+              <button class="profile-dropdown-item" data-profile-action="edit" type="button" role="menuitem">
+                <span>✎</span> Edit Profile
+              </button>
+
+              <button class="profile-dropdown-item" data-profile-action="settings" type="button" role="menuitem">
+                <span>⚙</span> Settings
+              </button>
+
+              <div class="profile-dropdown-divider"></div>
+
+              <button class="profile-dropdown-item profile-dropdown-item--auth" data-profile-action="auth" type="button" role="menuitem">
+                <span>⏻</span> <span id="dropdownAuthLabel">Sign in</span>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </header>
+
+
+      <!-- =====================================
+           DASHBOARD
+      ====================================== -->
+      <section class="view active" id="dashboard">
+
+        <div class="welcome-hero">
+
+          <div class="hero-content">
+
+            <span class="hero-tag">
+              <span class="hero-tag-dot"></span>
+              CLASS IX LEARNING HUB
+            </span>
+
+            <h2>
+              Learn smarter.<br>
+              <span>Think beyond.</span>
+            </h2>
+
+            <p id="heroWelcome">
+              Your personal learning space for Maths, Science and English.
+              Explore concepts, ask questions and test your knowledge.
+            </p>
+
+            <div class="hero-actions">
+
+              <button class="primary-button" data-view="assistant" type="button">
+                Explore Assistant
+                <span>↗</span>
+              </button>
+
+              <button class="secondary-button" data-view="subjects" type="button">
+                Explore Subjects
+              </button>
+
+            </div>
+
+          </div>
+
+          <div class="hero-decoration">
+            <div class="hero-orbit orbit-one"></div>
+            <div class="hero-orbit orbit-two"></div>
+            <div class="hero-decoration-label">EDUCORE</div>
+          </div>
+
+        </div>
+
+
+        <!-- SUBJECT CARDS -->
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">YOUR CURRICULUM</span>
+            <h2>Choose a subject</h2>
+          </div>
+
+          <span class="section-caption">THREE SUBJECTS · ONE PLACE</span>
+        </div>
+
+
+        <div class="subject-grid">
+
+          <button class="subject-card maths-card" data-subject="maths" type="button">
+
+            <div class="subject-card-top">
+              <span class="subject-symbol">∑</span>
+              <span class="subject-arrow">↗</span>
+            </div>
+
+            <div>
+              <span class="subject-number">01 / SUBJECT</span>
+              <h3>Mathematics</h3>
+              <p>Numbers, equations, geometry and logical thinking.</p>
+            </div>
+
+            <span class="subject-card-footer">EXPLORE MATHEMATICS →</span>
+
+          </button>
+
+
+          <button class="subject-card science-card" data-subject="science" type="button">
+
+            <div class="subject-card-top">
+              <span class="subject-symbol">⚛</span>
+              <span class="subject-arrow">↗</span>
+            </div>
+
+            <div>
+              <span class="subject-number">02 / SUBJECT</span>
+              <h3>Science</h3>
+              <p>Discover matter, motion, life and the world around us.</p>
+            </div>
+
+            <span class="subject-card-footer">EXPLORE SCIENCE →</span>
+
+          </button>
+
+
+          <button class="subject-card english-card" data-subject="english" type="button">
+
+            <div class="subject-card-top">
+              <span class="subject-symbol">Aa</span>
+              <span class="subject-arrow">↗</span>
+            </div>
+
+            <div>
+              <span class="subject-number">03 / SUBJECT</span>
+              <h3>English</h3>
+              <p>Grammar, vocabulary, writing and communication.</p>
+            </div>
+
+            <span class="subject-card-footer">EXPLORE ENGLISH →</span>
+
+          </button>
+
+        </div>
+
+
+        <!-- ASSISTANT BANNER -->
+        <div class="assistant-banner">
+          <div class="assistant-banner-icon">✧</div>
+
+          <div class="assistant-banner-content">
+            <span class="section-eyebrow">YOUR STUDY COMPANION</span>
+            <h3>Meet the EDUCORE Assistant</h3>
+            <p>
+              A scripted learning assistant built to help you understand
+              Class IX concepts through predefined explanations.
+            </p>
+          </div>
+
+          <button class="primary-button" data-view="assistant" type="button">
+            Start chatting <span>↗</span>
+          </button>
+
+        </div>
+
+
+        <footer class="main-footer">
+          <span>© 2026 EDUCORE</span>
+          <span>BUILT FOR CURIOUS MINDS.</span>
+          <button id="openCreditsBtn" type="button">Meet the team ↗</button>
+        </footer>
+
+      </section>
+
+
+
+      <!-- =====================================
+           ASSISTANT
+      ====================================== -->
+      <section class="view" id="assistant">
+
+        <div class="assistant-header">
+
+          <div>
+            <span class="section-eyebrow">EDUCORE INTELLIGENCE</span>
+            <h2>Learning Assistant</h2>
+            <p>Your scripted study companion for Class IX.</p>
+          </div>
+
+          <div class="assistant-status">
+            <span class="status-dot"></span>
+            ONLINE
+          </div>
+
+        </div>
+
+
+        <!-- SUBJECT SELECTOR -->
+        <div class="chat-subject-selector">
+
+          <span class="selector-label">CURRENT SUBJECT</span>
+
+          <button class="chat-subject-button active" data-chat-subject="maths" type="button">
+            ∑ Maths
+          </button>
+
+          <button class="chat-subject-button" data-chat-subject="science" type="button">
+            ⚛ Science
+          </button>
+
+          <button class="chat-subject-button" data-chat-subject="english" type="button">
+            Aa English
+          </button>
+
+        </div>
+
+
+        <!-- CHAT WINDOW -->
+        <div class="chat-container">
+
+          <div class="chat-messages" id="chatMessages">
+
+            <div class="message bot-message">
+
+              <div class="message-avatar">E</div>
+
+              <div class="message-content">
+                <small>EDUCORE · MATHS</small>
+
+                <p>
+                  Welcome to EDUCORE! ✧
+                  <br>
+                  I'm your Class IX study assistant. Ask me about
+                  Maths, Science or English, or choose a suggested topic below.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- SUGGESTIONS -->
+          <div class="suggestions-wrapper">
+
+            <span class="suggestions-label">QUICK QUESTIONS</span>
+
+            <div class="suggestions" id="suggestions">
+
+              <button class="suggestion" type="button" data-question="What is a polynomial?">
+                What is a polynomial?
+              </button>
+
+              <button class="suggestion" type="button" data-question="Explain photosynthesis">
+                Explain photosynthesis
+              </button>
+
+              <button class="suggestion" type="button" data-question="What are tenses?">
+                What are tenses?
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- CHAT INPUT -->
+          <form class="chat-input-area" id="chatForm">
+
+            <input
+              type="text"
+              id="chatInput"
+              placeholder="Ask something about your studies..."
+              autocomplete="off"
+              maxlength="500"
+              required
+            >
+
+            <button type="submit" aria-label="Send message">
+              <span>↑</span>
+            </button>
+
+          </form>
+
+          <div class="chat-disclaimer">
+            EDUCORE uses predefined scripts and responses. It is not a generative AI chatbot.
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================
+           SUBJECTS
+      ====================================== -->
+      <section class="view" id="subjects">
+
+        <div class="page-intro">
+          <span class="section-eyebrow">EXPLORE YOUR CURRICULUM</span>
+          <h2>Subjects</h2>
+          <p>
+            Choose a subject to explore its topics with the EDUCORE Assistant.
+          </p>
+        </div>
+
+
+        <div class="subjects-list">
+
+          <div class="subject-detail-card">
+
+            <div class="detail-icon maths-icon">∑</div>
+
+            <div class="detail-content">
+              <span class="subject-number">SUBJECT 01</span>
+              <h3>Mathematics</h3>
+              <p>
+                Explore algebra, number systems, coordinate geometry,
+                lines and angles, triangles, circles and statistics.
+              </p>
+            </div>
+
+            <button class="primary-button" data-chat-subject="maths" type="button">
+              Open subject ↗
+            </button>
+
+          </div>
+
+
+          <div class="subject-detail-card">
+
+            <div class="detail-icon science-icon">⚛</div>
+
+            <div class="detail-content">
+              <span class="subject-number">SUBJECT 02</span>
+              <h3>Science</h3>
+              <p>
+                Learn about matter, mixtures, atoms, cells, motion,
+                force, gravitation and sound.
+              </p>
+            </div>
+
+            <button class="primary-button" data-chat-subject="science" type="button">
+              Open subject ↗
+            </button>
+
+          </div>
+
+
+          <div class="subject-detail-card">
+
+            <div class="detail-icon english-icon">Aa</div>
+
+            <div class="detail-content">
+              <span class="subject-number">SUBJECT 03</span>
+              <h3>English</h3>
+              <p>
+                Improve grammar, tenses, active and passive voice,
+                reported speech and writing skills.
+              </p>
+            </div>
+
+            <button class="primary-button" data-chat-subject="english" type="button">
+              Open subject ↗
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================
+           QUIZ
+      ====================================== -->
+      <section class="view" id="quiz">
+
+        <div class="page-intro">
+          <span class="section-eyebrow">TEST YOUR KNOWLEDGE</span>
+          <h2>Quick Quiz</h2>
+          <p>Challenge yourself with questions from different subjects.</p>
+        </div>
+
+
+        <div class="quiz-container">
+
+          <div class="quiz-top">
+
+            <div>
+              <span class="section-eyebrow">KNOWLEDGE CHECK</span>
+              <h3>Let's see what you know.</h3>
+            </div>
+
+            <div class="quiz-badge">CLASS IX</div>
+
+          </div>
+
+
+          <div class="quiz-progress-info">
+            <span id="quizProgress">QUESTION 01 / 03</span>
+            <span>QUIZ SESSION</span>
+          </div>
+
+
+          <div class="quiz-progress-track">
+            <div class="quiz-progress-bar" id="quizProgressBar"></div>
+          </div>
+
+
+          <div class="quiz-question-area">
+
+            <span class="question-label">YOUR QUESTION</span>
+
+            <h2 id="quizQuestion">
+              Which of these is an algebraic identity?
+            </h2>
+
+            <div class="quiz-options" id="quizOptions">
+
+              <button class="quiz-option" type="button">
+                (a + b)² = a² + 2ab + b²
+              </button>
+
+              <button class="quiz-option" type="button">
+                a + b = ab
+              </button>
+
+              <button class="quiz-option" type="button">
+                a² + b² = (a + b)²
+              </button>
+
+              <button class="quiz-option" type="button">
+                a - b = 0
+              </button>
+
+            </div>
+
+            <div class="quiz-feedback" id="quizFeedback"></div>
+
+            <button class="primary-button quiz-next-button" id="nextQuestion" type="button" disabled>
+              Next question →
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================
+           MY LEARNING / PROGRESS
+      ====================================== -->
+      <section class="view" id="progress">
+
+        <div class="page-intro">
+          <span class="section-eyebrow">YOUR ACTIVITY</span>
+          <h2>My Learning</h2>
+          <p>A record of what you have actually done in EDUCORE. Nothing here is estimated.</p>
+        </div>
+
+
+        <div class="stat-grid" id="statGrid">
+
+          <div class="stat-card">
+            <span class="stat-label">QUIZZES FINISHED</span>
+            <strong class="stat-value" id="statQuizzes">0</strong>
+            <small class="stat-hint" id="statQuizzesHint">No quizzes completed yet</small>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">AVERAGE SCORE</span>
+            <strong class="stat-value" id="statAverage">—</strong>
+            <small class="stat-hint" id="statAverageHint">Finish a quiz to see this</small>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">MESSAGES SENT</span>
+            <strong class="stat-value" id="statMessages">0</strong>
+            <small class="stat-hint">Questions you asked the assistant</small>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">SUBJECTS OPENED</span>
+            <strong class="stat-value" id="statSubjects">0</strong>
+            <small class="stat-hint">Distinct subjects you explored</small>
+          </div>
+
+        </div>
+
+
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">PICK UP WHERE YOU LEFT OFF</span>
+            <h2>Continue learning</h2>
+          </div>
+        </div>
+
+        <div id="continueLearningSlot"></div>
+
+
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">LEARNING PROGRESS</span>
+            <h2>Quiz results</h2>
+          </div>
+          <span class="section-caption" id="quizHistoryCaption">RECORDED LOCALLY</span>
+        </div>
+
+        <div class="history-list" id="quizHistory"></div>
+
+
+        <div class="section-heading">
+          <div>
+            <span class="section-eyebrow">RECENT ACTIVITY</span>
+            <h2>What you've been doing</h2>
+          </div>
+        </div>
+
+        <div class="activity-list" id="activityList"></div>
+
+      </section>
+
+
+
+      <!-- =====================================
+           SETTINGS
+      ====================================== -->
+      <section class="view" id="settings">
+
+        <div class="page-intro">
+          <span class="section-eyebrow">PREFERENCES</span>
+          <h2>Settings</h2>
+          <p>Everything here is stored in this browser only and applies immediately.</p>
+        </div>
+
+
+        <div class="settings-layout">
+
+          <!-- APPEARANCE -->
+          <div class="settings-card" id="settings-appearance">
+            <div class="settings-card-head">
+              <span class="settings-card-icon">◐</span>
+              <div>
+                <h3>Appearance</h3>
+                <p>How EDUCORE looks and moves.</p>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Theme</strong>
+                <small>Switch between dark and light.</small>
+              </div>
+              <div class="segmented" role="group" aria-label="Theme">
+                <button type="button" data-theme-choice="dark">Dark</button>
+                <button type="button" data-theme-choice="light">Light</button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Accent colour</strong>
+                <small>The highlight colour across the interface.</small>
+              </div>
+              <div class="accent-swatches" role="group" aria-label="Accent colour">
+                <button type="button" class="accent-swatch" data-accent="nebula" style="--swatch:#9858f5" aria-label="Nebula"></button>
+                <button type="button" class="accent-swatch" data-accent="indigo" style="--swatch:#6f5cf5" aria-label="Indigo"></button>
+                <button type="button" class="accent-swatch" data-accent="orchid" style="--swatch:#b45cf0" aria-label="Orchid"></button>
+                <button type="button" class="accent-swatch" data-accent="amethyst" style="--swatch:#8a45f2" aria-label="Amethyst"></button>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Interface animations</strong>
+                <small>Entrance and hover motion. Turn off for a calmer UI.</small>
+              </div>
+              <button class="switch" id="settingAnimations" type="button" role="switch" aria-checked="true">
+                <span class="switch-thumb"></span>
+              </button>
+            </div>
+
+          </div>
+
+
+          <!-- ACCOUNT -->
+          <div class="settings-card" id="settings-account">
+            <div class="settings-card-head">
+              <span class="settings-card-icon">◍</span>
+              <div>
+                <h3>Account</h3>
+                <p>Your identity in EDUCORE.</p>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Account status</strong>
+                <small id="settingsAccountStatus">Local profile — not connected to a verified account.</small>
+              </div>
+              <span class="account-chip" id="settingsAccountChip">LOCAL</span>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Email address</strong>
+                <small id="settingsAccountEmail">Not available for a local profile.</small>
+              </div>
+            </div>
+
+            <div class="settings-card-actions">
+              <button class="secondary-button" id="settingsEditProfileBtn" type="button">Edit profile</button>
+              <button class="secondary-button settings-signout" id="settingsSignOutBtn" type="button" hidden>Sign out</button>
+            </div>
+          </div>
+
+
+          <!-- EXPERIENCE -->
+          <div class="settings-card" id="settings-experience">
+            <div class="settings-card-head">
+              <span class="settings-card-icon">✦</span>
+              <div>
+                <h3>Experience</h3>
+                <p>Behaviour and comfort.</p>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Reduced motion</strong>
+                <small>Minimise animation and transition. Overrides interface animations.</small>
+              </div>
+              <button class="switch" id="settingReducedMotion" type="button" role="switch" aria-checked="false">
+                <span class="switch-thumb"></span>
+              </button>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Show quick questions</strong>
+                <small>Display the suggested prompts above the chat box.</small>
+              </div>
+              <button class="switch" id="settingShowSuggestions" type="button" role="switch" aria-checked="true">
+                <span class="switch-thumb"></span>
+              </button>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Activity notifications</strong>
+                <small>Record real events such as finished quizzes. No alerts are ever fabricated.</small>
+              </div>
+              <button class="switch" id="settingNotifications" type="button" role="switch" aria-checked="true">
+                <span class="switch-thumb"></span>
+              </button>
+            </div>
+
+          </div>
+
+
+          <!-- ABOUT -->
+          <div class="settings-card" id="settings-about">
+            <div class="settings-card-head">
+              <span class="settings-card-icon">◇</span>
+              <div>
+                <h3>About</h3>
+                <p>EDUCORE information.</p>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Version</strong>
+                <small>EDUCORE 2.0</small>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>About EDUCORE</strong>
+                <small>A Class IX learning space with a scripted assistant, subjects and quizzes.</small>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <strong>Privacy</strong>
+                <small>Your theme, profile and activity stay in this browser's local storage. Nothing is sent to a server, and there is no backend account system.</small>
+              </div>
+            </div>
+
+            <div class="settings-card-actions">
+              <button class="secondary-button" id="settingsCreditsBtn" type="button">View credits</button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- =====================================
+           PROFILE
+      ====================================== -->
+      <section class="view" id="profile">
+
+        <div class="page-intro">
+          <span class="section-eyebrow">YOUR ACCOUNT</span>
+          <h2>Profile</h2>
+          <p>How you appear inside EDUCORE.</p>
+        </div>
+
+
+        <div class="profile-hero">
+
+          <div class="profile-hero-avatar" id="profileHeroAvatar">S</div>
+
+          <div class="profile-hero-identity">
+            <h2 id="profileHeroName">Guest</h2>
+            <p id="profileHeroHandle">@guest</p>
+            <span class="profile-verification" id="profileVerification">Local profile · stored in this browser</span>
+          </div>
+
+        </div>
+
+
+        <div class="profile-columns">
+
+          <div class="settings-card">
+            <div class="settings-card-head">
+              <span class="settings-card-icon">◉</span>
+              <div>
+                <h3>Account information</h3>
+                <p>Where your details come from.</p>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <small class="setting-key">DISPLAY NAME</small>
+                <strong id="profileInfoDisplay">Guest</strong>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <small class="setting-key">USERNAME</small>
+                <strong id="profileInfoHandle">@guest</strong>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <small class="setting-key">EMAIL</small>
+                <strong id="profileInfoEmail">Not available</strong>
+              </div>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-row-text">
+                <small class="setting-key">SOURCE</small>
+                <strong id="profileInfoSource">Local preferences</strong>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="settings-card">
+            <div class="settings-card-head">
+              <span class="settings-card-icon">✎</span>
+              <div>
+                <h3>Edit profile</h3>
+                <p>Display preferences for this browser.</p>
+              </div>
+            </div>
+
+            <form id="profileForm" class="profile-form" novalidate>
+
+              <label class="field">
+                <span>Display name</span>
+                <input type="text" id="profileDisplayName" maxlength="40" placeholder="Guest" autocomplete="off">
+                <small class="field-hint" id="profileNameHint">Shown in greetings and headings.</small>
+              </label>
+
+              <label class="field">
+                <span>Username</span>
+                <input type="text" id="profileUsername" maxlength="24" placeholder="guest" autocomplete="off">
+                <small class="field-hint" id="profileHandleHint">Letters, numbers and underscores.</small>
+              </label>
+
+              <label class="field">
+                <span>Bio</span>
+                <textarea id="profileBio" maxlength="140" rows="3" placeholder="A short line about you."></textarea>
+                <small class="field-hint"><span id="profileBioCount">0</span>/140</small>
+              </label>
+
+              <div class="profile-form-actions">
+                <button class="primary-button" type="submit">Save changes</button>
+                <button class="secondary-button" type="button" id="profileResetBtn">Reset</button>
+              </div>
+
+              <p class="form-status" id="profileFormStatus" role="status" aria-live="polite"></p>
+
+            </form>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+
+  <!-- =====================================
+       AUTHENTICATION MODAL
+  ====================================== -->
+  <div class="modal-overlay" id="authModal">
+
+    <div class="modal auth-modal">
+
+      <button class="modal-close" id="closeAuthBtn" type="button" aria-label="Close">
+        ×
+      </button>
+
+
+      <!-- SIGNED OUT -->
+      <div id="authChoicePanel">
+
+        <span class="section-eyebrow">YOUR EDUCORE ACCOUNT</span>
+
+        <h2>Welcome back.</h2>
+
+        <p class="modal-description">
+          Sign in to your account to access your EDUCORE profile.
+        </p>
+
+
+        <!-- Google Identity Services button -->
+        <div class="google-signin-container">
+
+          <div id="googleRenderedBtn"></div>
+
+        </div>
+
+
+        <div class="auth-divider">
+          <span>SECURE SIGN-IN</span>
+        </div>
+
+        <p class="auth-note">
+          Google handles your authentication securely.
+          EDUCORE does not ask for your Google password.
+          <br><br>
+          <small style="color: var(--subtle); font-size: 9px;">
+            Note: Sign-in requires serving this page over HTTP (not file://).
+            Use a local server like VS Code Live Server or <code>npx serve</code>.
+          </small>
+        </p>
+
+      </div>
+
+
+      <!-- SIGNED IN -->
+      <div id="signedInPanel" hidden>
+
+        <div class="modal-brand-icon">✓</div>
+
+        <span class="section-eyebrow">ACCOUNT CONNECTED</span>
+
+        <h2>You're signed in.</h2>
+
+        <div class="signed-in-profile">
+
+          <div class="signed-in-avatar" id="signedInAvatar">S</div>
+
+          <div>
+            <strong id="signedInName">User</strong>
+            <small id="signedInEmail">user@gmail.com</small>
+          </div>
+
+        </div>
+
+        <button class="secondary-button logout-button" id="logoutBtn" type="button">
+          Sign out
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- =====================================
+       CREDITS MODAL
+  ====================================== -->
+  <div class="modal-overlay" id="creditsModal">
+
+    <div class="modal credits-modal">
+
+      <button class="modal-close" id="closeCreditsBtn" type="button" aria-label="Close">&#10005;</button>
+
+      <div class="credits-content">
+
+      <div class="modal-brand-icon">✦</div>
+
+      <span class="section-eyebrow">THE PEOPLE BEHIND THE PROJECT</span>
+
+      <h2>Meet the crew.</h2>
+
+      <p class="modal-description">
+        EDUCORE is built by a small team with one goal:
+        making learning a little more accessible.
+      </p>
+
+
+      <div class="credits-list">
+
+        <div class="credit-member">
+          <span class="credit-number">01</span>
+          <div>
+            <strong>Avinash</strong>
+            <small>Project lead</small>
+          </div>
+        </div>
+
+        <div class="credit-member">
+          <span class="credit-number">02</span>
+          <div>
+            <strong>Shubham</strong>
+            <small>Core team</small>
+          </div>
+        </div>
+
+        <div class="credit-member">
+          <span class="credit-number">03</span>
+          <div>
+            <strong>Shoaib</strong>
+            <small>Core team</small>
+          </div>
+        </div>
+
+        <div class="credit-member">
+          <span class="credit-number">04</span>
+          <div>
+            <strong>Uday</strong>
+            <small>Core team</small>
+          </div>
+        </div>
+
+        <div class="credit-member">
+          <span class="credit-number">05</span>
+          <div>
+            <strong>Gagan</strong>
+            <small>Core team</small>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="credits-footer">
+        <span>EDUCORE</span>
+        <span>LEARN BEYOND LIMITS.</span>
+      </div>
+
+      </div><!-- /.credits-content -->
+
+    </div>
+
+  </div>
+
+
+</body>
+</html>
